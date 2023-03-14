@@ -16,6 +16,8 @@ imdb_titles = imdb_movies[(imdb_movies['titleType'] == 'movie')]
 imdb_titles = imdb_titles[(imdb_titles['startYear'] >= '2010') & \
                           (imdb_titles['startYear'] <= '2020')]
 
+imdb_titles = imdb_titles[(imdb_titles['runTime'] > 0)]
+
 # remove adult movies
 imdb_titles = imdb_titles[imdb_titles['isAdult'] == '0']
 

@@ -1,13 +1,27 @@
-import java.util.Arrays;
+import java.io.IOException;
 import java.util.Scanner;
 /**
  * Movie Mate class is the main class that starts running the program.
  *
  */
 public class MovieMate {
+    private static Storage storage = new Storage();
     private static String filePath = "data/movies.csv";
-    private static WatchedList watchedList = new WatchedList();
+    private static String newMoviesDB = "data/movies_trimmed.csv";
+    private static String watchedListPath = "data/moviemate_data.txt";
+    private static WatchedList watchedList = new WatchedList(storage.load(watchedListPath));
     private static ToWatchList toWatchList = new ToWatchList();
+    private static MovieDatabase movieDatabase;
+
+    static {
+        try {
+            movieDatabase = new MovieDatabase(ReadCSVFile.readEntireCSV(newMoviesDB));
+        } catch (IOException e) {
+            System.out.println("Critical error with database file.");
+            System.exit(1);
+        }
+    }
+
     public static void main(String[] args) {
         Ui.showWelcomeMessage();
         // Initialise Scanner
@@ -23,28 +37,32 @@ public class MovieMate {
             switch (commandType) {
             case "watched":
                 // add to watched list
-                String[] movieInfo = ReadCSVFile.find(filePath, commandArg);
-                Movie movie = new Movie(movieInfo[0], movieInfo[2], Integer.parseInt(movieInfo[4]),
-                        Integer.parseInt(movieInfo[5]), Arrays.copyOfRange(movieInfo, 5, movieInfo.length));
-                watchedList.add(movie);
+                watchedList.add(commandArg);
                 break;
             case "towatch":
                 // add to to-watch list
+                toWatchList.add(commandArg);
                 break;
             case "help":
                 Ui.help();
+                Ui.printLine();
                 break;
             case "list":
                 Ui.showWatchedList(watchedList);
                 // list the watched list
+                Ui.showListMessage(watchedList);
                 break;
             case "watchlist":
                 // list the to-watch list
+                Ui.showListMessage(toWatchList);
                 break;
+            case "seedetail":
+                // find relevant movie info
+                break;
+            case "exit":
+                // fallthrough
             case "bye":
-                // TODO: Extract this process and print message, save data, upon exit.
-                Ui.showExitMessage();
-                System.exit(0);
+                exit();
                 break;
             default:
                 Ui.help();
@@ -53,6 +71,14 @@ public class MovieMate {
         }
 
     }
+
+    private static void exit() {
+        Ui.showExitMessage();
+        Ui.printLine();
+        storage.writeToFile(watchedListPath, watchedList.getFileWriteFormat());
+        System.exit(0);
+    }
+
     /**
      * Scan in the user input and trim extra white space.
      * If there is no input, continue to scan the next line for input.

@@ -28,6 +28,15 @@ public class Movie implements Comparable<Movie> {
         this.genres = genres;
     }
 
+    public Movie(String[] movieString) {
+        this.titleID = movieString[0];
+        this.title = movieString[1];
+        this.year = Integer.parseInt(movieString[2]);
+        this.runTimeMinutes = (int)Double.parseDouble(movieString[3]);
+        this.genres = movieString[4].split(",");
+
+    }
+
     /**
      * Overloaded constructor.
      * @param movie A movie.
@@ -39,6 +48,7 @@ public class Movie implements Comparable<Movie> {
     /**
      * Default comparator.
      * Sorting rules: Alphabetical title, then year.
+     * TODO: need to compareTo titleID in case there is a same movie same year?
      * @param o the object to be compared.
      * @return
      */
@@ -47,6 +57,27 @@ public class Movie implements Comparable<Movie> {
         return (this.getTitle().equals(o.getTitle())) ?
                 (this.getYear() - o.getYear())
                 : (this.getTitle().compareTo(o.getTitle()));
+    }
+
+    public String getWriteFormat() {
+        String splitGenres = this.splitGenres();
+        // TODO: See if i can extract the delimiter somehow...
+        // ID|Title|Year|RunTime|Genres
+        return String.format("%s|%s|%d|%d|%s",
+                this.titleID,
+                this.title,
+                this.year,
+                this.runTimeMinutes,
+                splitGenres);
+    }
+
+    public String splitGenres() {
+        String output = "";
+        for (String genre : this.genres) {
+            output += genre + ",";
+        }
+        // Remove last comma
+        return output.substring(0, output.length() - 1);
     }
 
     /* Getters all here below */
@@ -69,4 +100,17 @@ public class Movie implements Comparable<Movie> {
     public String[] getGenres() {
         return genres;
     }
+
+    @Override
+    public String toString() {
+        return String.format("%s (%d)", this.title, this.year);
+        /*
+        return "Title: " + title + "\n" +
+                "Year: " + year + "\n" +
+                "Run time: " + runTimeMinutes + "\n" +
+                "Genres: " + genres;
+
+         */
+    }
+    
 }

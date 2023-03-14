@@ -16,9 +16,9 @@ public class MovieEntry extends Movie {
      * Overloaded constructor...
      * @param movie
      */
-    public MovieEntry(Movie movie) {
+    public MovieEntry(Movie movie, String review) {
         super(movie);
-        this.review = "";
+        this.review = review;
     }
 
     /**
@@ -45,7 +45,11 @@ public class MovieEntry extends Movie {
         return (this.review != null && this.review != "");
     }
 
-
+    @Override
+    public String getWriteFormat() {
+        return super.getWriteFormat()
+                + String.format("|%s", this.review);
+    }
 
 
 }

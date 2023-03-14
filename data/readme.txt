@@ -7,3 +7,7 @@ Removing adult movies and unnecessary columns as well.
 adapted from https://thatdatascienceguy.medium.com/working-with-the-imdb-dataset-589d46d230c6
 
 python file added for reference too. 
+
+I also made another further_filter which drops useless tables like movie type, and secondary title which we won't be using.
+
+Also removed those movies without runtime data and with special characters in the title.
