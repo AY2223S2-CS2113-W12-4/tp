@@ -3,34 +3,22 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class ReadCSVFile {
+/**
+ * Class that contains only static methods to parse CSV.
+ * To be used by Storage through delegation.
+ */
+public final class ReadCSVFile {
     // Split but ignore those in strings e.g. "Genre, Genre, Genre".
     // Follow CSV convention.
     // https://stackoverflow.com/questions/1757065/java-splitting-a-comma-separated-string-but-ignoring-commas-in-quotes
     private static final String CSV_DELIM = ",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)";
-    // We only want this many movies.
-    private static final int MAX_LINES_READ = 10000;
+    // For above, to target (and remove) the opening and closing quotes.
+    private static final String REGEX_REMOVE_QUOTES = "^\\\"+|\\\"+$";
 
-    public static String[] find(String filePath, String movieName) {
-        String csvFile = filePath;
-        String line = "";
+    // We only want this many movies (Note the file itself has about 130,000).
+    private static final int MAX_LINES_READ = 150000;
 
-
-        try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
-            Integer c = 0;
-            while (c < MAX_LINES_READ && (line = br.readLine()) != null) {
-                if (line.contains(movieName)) {
-                    String[] row = line.split(CSV_DELIM, -1);
-                    return row;
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public static ArrayList<String[]> readEntireCSV(String filePath) {
+    public static final ArrayList<String[]> readEntireCSV(String filePath) {
         String line = "";
 
         ArrayList<String[]> output = new ArrayList<String[]>();
@@ -40,6 +28,11 @@ public class ReadCSVFile {
             Integer numLinesRead = 0;
             while (numLinesRead < MAX_LINES_READ && (line = br.readLine()) != null) {
                 String[] row = line.split(CSV_DELIM, -1);
+
+                for (int i = 0; i < row.length; i++) {
+                    row[i] = trimQuotes(row[i]);
+                }
+
                 output.add(row);
             }
 
@@ -48,6 +41,21 @@ public class ReadCSVFile {
             e.printStackTrace();
         }
         return output;
+    }
+
+    /**
+     * Remove start and end quotes.
+     */
+    private static String trimQuotes(String input) {
+        if (input.contains("\"")) {
+            String[] split = input.split(REGEX_REMOVE_QUOTES);
+            for (String s : split) {
+                if (!s.isEmpty()) {
+                    return s;
+                }
+            }
+        }
+        return input;
     }
 }
 

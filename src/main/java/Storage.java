@@ -11,6 +11,7 @@ import java.util.Scanner;
  */
 public final class Storage {
 
+    private static final String DATABASE_PATH = "data/movies_trimmed.csv";
     private static final String DEFAULT_FILE_PATH = "data/moviemate_data.txt";
     private static final String FILE_DELIMITER = "|";
     private String filePath; // To store custom file path and for methods to reference.
@@ -112,4 +113,9 @@ public final class Storage {
             System.out.println("Something wrong: " + e.getMessage());
         }
     }
+
+    public ArrayList<String[]> loadDatabase() {
+        return ReadCSVFile.readEntireCSV(DATABASE_PATH);
+    }
+
 }

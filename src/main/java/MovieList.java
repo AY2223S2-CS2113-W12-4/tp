@@ -65,6 +65,17 @@ public class MovieList {
     }
 
     /**
+     * Prints all the movies inside.
+     */
+    public void list() {
+        int i = 1;
+        for (Movie movie : movieList) {
+            System.out.printf("%d. %s\n", i, movie.toString());
+            i++;
+        }
+    }
+
+    /**
      * Remove a specific movie from the contained list.
      * @param movie a movie.
      */

@@ -7,17 +7,17 @@ import java.util.Scanner;
 public class MovieMate {
     private static Storage storage = new Storage();
     private static String filePath = "data/movies.csv";
-    private static String newMoviesDB = "data/movies_trimmed.csv";
-    private static String watchedListPath = "data/moviemate_data.txt";
+    private static String watchedListPath = "data/moviemate_watchlist.txt";
+    private static String toWatchListPath = "data/moviemate_towatch.txt";
     private static WatchedList watchedList = new WatchedList(storage.load(watchedListPath));
-    private static ToWatchList toWatchList = new ToWatchList();
+    private static ToWatchList toWatchList = new ToWatchList(storage.load(toWatchListPath));
     private static MovieDatabase movieDatabase;
 
     static {
         try {
-            movieDatabase = new MovieDatabase(ReadCSVFile.readEntireCSV(newMoviesDB));
+            movieDatabase = new MovieDatabase(storage.loadDatabase());
         } catch (IOException e) {
-            System.out.println("Critical error with database file.");
+            System.out.println("Critical error: You might be missing a database file.");
             System.exit(1);
         }
     }
@@ -65,11 +65,13 @@ public class MovieMate {
                 break;
             case "list":
                 // list the watched list
-                Ui.showListMessage(watchedList);
+                watchedList.list();
+                Ui.printLine();
                 break;
             case "watchlist":
                 // list the to-watch list
-                Ui.showListMessage(toWatchList);
+                toWatchList.list();
+                Ui.printLine();   
                 break;
             case "addreview":
                 // adds review to a movie in the watched list
@@ -99,6 +101,7 @@ public class MovieMate {
         Ui.showExitMessage();
         Ui.printLine();
         storage.writeToFile(watchedListPath, watchedList.getFileWriteFormat());
+        storage.writeToFile(toWatchListPath, toWatchList.getFileWriteFormat());
         System.exit(0);
     }
 
