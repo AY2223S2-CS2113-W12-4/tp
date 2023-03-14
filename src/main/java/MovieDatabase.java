@@ -53,4 +53,24 @@ public class MovieDatabase {
         }
         return relevantMovies;
     }
+
+    public static ArrayList<Movie> filter(String userInputGenre) {
+        ArrayList<Movie> relevantMovies = new ArrayList<>();
+        Integer movieCount = 0;
+        for (Map.Entry<String, Movie> entry : movieDatabase.entrySet()) {
+            Movie movie = entry.getValue();
+            for (String genre : movie.getGenres()){
+                if (genre.equalsIgnoreCase(userInputGenre)) {
+                    relevantMovies.add(movie);
+                    movieCount += 1;
+                    break;
+                }
+            }
+            if (movieCount.equals(MAX_RELEVANT_MOVIES)) {
+                break;
+            }
+        }
+        return relevantMovies;
+    }
+
 }
