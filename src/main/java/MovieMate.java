@@ -40,6 +40,21 @@ public class MovieMate {
                 // add to watched list
                 watchedList.add(commandArg);
                 break;
+            case "remove":
+                switch (commandArg) {
+                case "watched":
+                    //remove from watched list
+                    Ui.showListMessage(watchedList);
+                    int removeWatchedIndex = Integer.parseInt(inputCommand(scan));
+                    watchedList.remove(removeWatchedIndex);
+                    break;
+                case "towatch":
+                    //remove from towatch list
+                    Ui.showListMessage(toWatchList);
+                    int removeToWatchIndex = Integer.parseInt(inputCommand(scan));
+                    toWatchList.remove(removeToWatchIndex);
+                    break;
+                }
             case "towatch":
                 // add to to-watch list
                 toWatchList.add(commandArg);
@@ -56,6 +71,14 @@ public class MovieMate {
                 // list the to-watch list
                 Ui.showListMessage(toWatchList);
                 break;
+            case "addreview":
+                // adds review to a movie in the watched list
+                break;
+            case "deletereview":
+                //deletes review of a movie in the watched list
+                break;
+            case "viewreview":
+                // view review written for a movie in the watched list
             case "seedetail":
                 // find relevant movie info
                 break;
