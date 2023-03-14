@@ -28,6 +28,22 @@ public class Ui {
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     public static void showWatchedList(WatchedList watchedList){
         System.out.println("Here is the list of movies that you have watched!");
         if (watchedList.movieList.size() == 0){
